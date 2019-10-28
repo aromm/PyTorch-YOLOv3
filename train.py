@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     # new lines
     os.makedirs(f"{opt.outf}/{opt.name}/checkpoints", exist_ok=True)
-    logFile = open(f"{opt.outf}/{opt.name}/logs.txt", "w")
+    logFile = open(f"{opt.outf}/{opt.name}/logs.txt", "w+")
     print(opt, file=logFile)
 
     # Get data configuration
@@ -100,6 +100,8 @@ if __name__ == "__main__":
     ]
 
     for epoch in range(opt.epochs):
+        logFile.close()
+        logFile = open(f"{opt.outf}/{opt.name}/logs.txt", "w+")
         model.train()
         start_time = time.time()
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
