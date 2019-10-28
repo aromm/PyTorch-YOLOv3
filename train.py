@@ -50,7 +50,7 @@ if __name__ == "__main__":
     # new lines
     os.makedirs(f"{opt.outf}/{opt.name}/checkpoints", exist_ok=True)
     logFile = open(f"{opt.outf}/{opt.name}/logs.txt", "w")
-    print(opt, file=logfile)
+    print(opt, file=logFile)
 
     # Get data configuration
     data_config = parse_data_config(opt.data_config)
@@ -149,12 +149,12 @@ if __name__ == "__main__":
             time_left = datetime.timedelta(seconds=epoch_batches_left * (time.time() - start_time) / (batch_i + 1))
             log_str += f"\n---- ETA {time_left}"
 
-            print(log_str, file=logfile)
+            print(log_str, file=logFile)
 
             model.seen += imgs.size(0)
 
         if epoch % opt.evaluation_interval == 0:
-            print("\n---- Evaluating Model ----", file=logfile)
+            print("\n---- Evaluating Model ----", file=logFile)
             # Evaluate the model on the validation set
             precision, recall, AP, f1, ap_class = evaluate(
                 model,
@@ -177,8 +177,8 @@ if __name__ == "__main__":
             ap_table = [["Index", "Class name", "AP"]]
             for i, c in enumerate(ap_class):
                 ap_table += [[c, class_names[c], "%.5f" % AP[i]]]
-            print(AsciiTable(ap_table).table, file=logfile)
-            print(f"---- mAP {AP.mean()}", file=logfile)
+            print(AsciiTable(ap_table).table, file=logFile)
+            print(f"---- mAP {AP.mean()}", file=logFile)
 
         if epoch % opt.checkpoint_interval == 0:
             torch.save(model.state_dict(), f"{opt.outf}/{opt.name}/checkpoints/yolov3_ckpt_{epoch}.pth")
