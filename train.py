@@ -39,7 +39,6 @@ if __name__ == "__main__":
     parser.add_argument("--compute_map", default=False, help="if True computes mAP every tenth batch")
     parser.add_argument("--multiscale_training", default=True, help="allow for multi-scale training")
     opt = parser.parse_args()
-    print(opt, file=logfile)
 
     logger = Logger("logs")
 
@@ -49,10 +48,10 @@ if __name__ == "__main__":
     os.makedirs("checkpoints", exist_ok=True)
 
     # new lines
-    os.makedirs(f"{opt.outf}/checkpoints/{opt.name}", exist_ok=True)
-    os.makedirs(f"{opt.outf}/logger", exist_ok=True)
-    logFile = open(f"{opt.outf}/logger/{opt.name}_logs.txt", "w")
-    
+    os.makedirs(f"{opt.outf}/{opt.name}/checkpoints", exist_ok=True)
+    logFile = open(f"{opt.outf}/{opt.name}/logs.txt", "w")
+    print(opt, file=logfile)
+
     # Get data configuration
     data_config = parse_data_config(opt.data_config)
     train_path = data_config["train"]
@@ -182,4 +181,4 @@ if __name__ == "__main__":
             print(f"---- mAP {AP.mean()}", file=logfile)
 
         if epoch % opt.checkpoint_interval == 0:
-            torch.save(model.state_dict(), f"{opt.outf}/checkpoints/{opt.name}/yolov3_ckpt_{epoch}.pth")
+            torch.save(model.state_dict(), f"{opt.outf}/{opt.name}/checkpoints/yolov3_ckpt_{epoch}.pth")
