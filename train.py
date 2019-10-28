@@ -157,6 +157,7 @@ if __name__ == "__main__":
 
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----", file=logFile)
+            print("\n---- Evaluating Model ----")
             # Evaluate the model on the validation set
             precision, recall, AP, f1, ap_class = evaluate(
                 model,
@@ -181,6 +182,8 @@ if __name__ == "__main__":
                 ap_table += [[c, class_names[c], "%.5f" % AP[i]]]
             print(AsciiTable(ap_table).table, file=logFile)
             print(f"---- mAP {AP.mean()}", file=logFile)
+            print(AsciiTable(ap_table).table)
+            print(f"---- mAP {AP.mean()}")
 
         if epoch % opt.checkpoint_interval == 0:
             torch.save(model.state_dict(), f"{opt.outf}/{opt.name}/checkpoints/yolov3_ckpt_{epoch}.pth")
