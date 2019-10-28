@@ -33,11 +33,13 @@ if __name__ == "__main__":
     parser.add_argument("--n_cpu", type=int, default=8, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
     parser.add_argument("--checkpoint_interval", type=int, default=1, help="interval between saving model weights")
+    parser.add_argument("--outf", type=str, default=".", help="folder to save checkpoint and log")
+    parser.add_argument("--name", type=str, default="yolov3",help="name of the training run") 
     parser.add_argument("--evaluation_interval", type=int, default=1, help="interval evaluations on validation set")
     parser.add_argument("--compute_map", default=False, help="if True computes mAP every tenth batch")
     parser.add_argument("--multiscale_training", default=True, help="allow for multi-scale training")
     opt = parser.parse_args()
-    print(opt)
+    print(opt, file=logfile)
 
     logger = Logger("logs")
 
@@ -46,6 +48,11 @@ if __name__ == "__main__":
     os.makedirs("output", exist_ok=True)
     os.makedirs("checkpoints", exist_ok=True)
 
+    # new lines
+    os.makedirs(f"{opt.outf}/checkpoints/{opt.name}", exist_ok=True)
+    os.makedirs(f"{opt.outf}/logger", exist_ok=True)
+    logFile = open(f"{opt.outf}/logger/{opt.name}_logs.txt", "w")
+    
     # Get data configuration
     data_config = parse_data_config(opt.data_config)
     train_path = data_config["train"]
@@ -143,12 +150,12 @@ if __name__ == "__main__":
             time_left = datetime.timedelta(seconds=epoch_batches_left * (time.time() - start_time) / (batch_i + 1))
             log_str += f"\n---- ETA {time_left}"
 
-            print(log_str)
+            print(log_str, file=logfile)
 
             model.seen += imgs.size(0)
 
         if epoch % opt.evaluation_interval == 0:
-            print("\n---- Evaluating Model ----")
+            print("\n---- Evaluating Model ----", file=logfile)
             # Evaluate the model on the validation set
             precision, recall, AP, f1, ap_class = evaluate(
                 model,
@@ -171,8 +178,8 @@ if __name__ == "__main__":
             ap_table = [["Index", "Class name", "AP"]]
             for i, c in enumerate(ap_class):
                 ap_table += [[c, class_names[c], "%.5f" % AP[i]]]
-            print(AsciiTable(ap_table).table)
-            print(f"---- mAP {AP.mean()}")
+            print(AsciiTable(ap_table).table, file=logfile)
+            print(f"---- mAP {AP.mean()}", file=logfile)
 
         if epoch % opt.checkpoint_interval == 0:
-            torch.save(model.state_dict(), f"checkpoints/yolov3_ckpt_%d.pth" % epoch)
+            torch.save(model.state_dict(), f"{opt.outf}/checkpoints/{opt.name}/yolov3_ckpt_{epoch}.pth")
