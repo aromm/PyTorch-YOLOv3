@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
     for epoch in range(opt.epochs):
         logFile.close()
-        logFile = open(f"{opt.outf}/{opt.name}/logs.txt", "w+")
+        logFile = open(f"{opt.outf}/{opt.name}/logs.txt", "a+")
         model.train()
         start_time = time.time()
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
