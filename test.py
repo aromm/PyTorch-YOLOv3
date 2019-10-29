@@ -51,6 +51,10 @@ def evaluate(model, path, iou_thres, conf_thres, nms_thres, img_size, batch_size
 
     # Concatenate sample statistics
     true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
+    print("Pred_labels", pred_labels)
+    print("pred_labels type", type(pred_labels))
+    print("labels", labels)
+    print("labels type", type(labels))
     precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
 
     return precision, recall, AP, f1, ap_class
