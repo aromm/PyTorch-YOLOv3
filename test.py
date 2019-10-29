@@ -55,10 +55,14 @@ def evaluate(model, path, iou_thres, conf_thres, nms_thres, img_size, batch_size
     
     print("Pred_labels", pred_labels)
     print("pred_labels type", type(pred_labels))
+    print("pred_labesl dtype", pred_labels.dtype)
     print("labels", labels)
     print("labels type", type(labels))
+    print("np_labels", np_labels)
+    print("np_labels type", type(np_labels))
+    print("np_labels dtype", np_labels.dtype)
     
-    accuracy = (pred_labels == np_labels).mean()
+    accuracy = (pred_labels == np_labels)#.mean()
     print("accuracy:", accuracy)
     precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
 
