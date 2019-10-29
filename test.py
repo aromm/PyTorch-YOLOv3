@@ -51,19 +51,6 @@ def evaluate(model, path, iou_thres, conf_thres, nms_thres, img_size, batch_size
 
     # Concatenate sample statistics
     true_positives, pred_scores, pred_labels = [np.concatenate(x, 0) for x in list(zip(*sample_metrics))]
-    np_labels = np.array(labels)
-    
-    print("Pred_labels shape", pred_labels.shape)
-    print("pred_labels type", type(pred_labels))
-    print("pred_labesl dtype", pred_labels.dtype)
-    print("labels", labels)
-    print("labels type", type(labels))
-    print("np_labels shape", np_labels.shape)
-    print("np_labels type", type(np_labels))
-    print("np_labels dtype", np_labels.dtype)
-    
-    accuracy = (pred_labels == np_labels)#.mean()
-    print("accuracy:", accuracy)
     precision, recall, AP, f1, ap_class = ap_per_class(true_positives, pred_scores, pred_labels, labels)
 
     return precision, recall, AP, f1, ap_class
